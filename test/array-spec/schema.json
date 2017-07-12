@@ -1,0 +1,71 @@
+{
+  "id": "http://some.site.somewhere/entry-schema#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "schem to test arrays",
+  "definitions": {
+    "string array": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "array of string arrays": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "restricted integer array": {
+      "type": "array",
+      "items": {
+        "maximum": 5,
+        "minimum": 2,
+        "type": "integer"
+      }
+    },
+    "array contains items": {
+      "type": "array",
+      "contains": {
+        "maximum": 5,
+        "minimum": 2,
+        "type": "integer"
+      }
+    },
+    "unique array": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "fixed array items": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": [
+        {
+          "type": "string",
+          "minLength": 5
+        },
+        {
+          "type": "number",
+          "maximum": 5
+        }
+      ],
+      "additionalItems": {
+        "type": "string",
+        "maxLength": 4
+      }
+    },
+    "restricted array length": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 5,
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

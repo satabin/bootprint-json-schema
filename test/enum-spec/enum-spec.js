@@ -12,7 +12,7 @@ var expect = require('chai').expect
 
 var tester = require('bootprint-unit-testing')
 
-describe('The ranges-fixture', function () {
+describe('enum', function () {
   this.timeout(10000)
   var bptest = tester(require('../..'), __dirname, require('./schema.json'))
 

@@ -1,0 +1,52 @@
+{{#with (json_schema__array_item_restrictions .)}}
+    {{#if length}}
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="list-inline">
+                    {{#each .}}
+                        <li>{{.}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    {{/if}}
+{{/with}}
+
+
+{{#if items}}
+    {{#if (json_schema__is_array items)}}
+        <p>{{json_schema__doclink 'items_array' text=true}}</p>
+        {{#each items}}
+            <div class="row">
+                <div class="col-md-1">
+                    Index {{@index}}:
+                </div>
+                <div class="col-md-11">
+                    <div class="json-schema--subschema">
+                        {{>json-schema/schema .}}
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+
+        <p>{{json_schema__doclink 'additionalItems' text=true}}</p>
+        {{#if additionalItems}}
+            <div class="json-schema--subschema">
+                {{>json-schema/schema additionalItems}}
+            </div>
+        {{/if}}
+    {{else}}
+        <p>{{json_schema__doclink 'items' text=true}}</p>
+        <div class="json-schema--subschema">
+            {{>json-schema/schema items}}
+        </div>
+    {{/if}}
+{{/if}}
+
+{{#if contains}}
+    <p>{{json_schema__doclink 'contains' text=true}}</p>
+    <div class="json-schema--subschema">
+        {{>json-schema/schema contains}}
+    </div>
+{{/if}}
+

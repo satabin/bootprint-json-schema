@@ -1,0 +1,12 @@
+{{#>json-schema/util/section title='Type'}}
+    {{#if type}}
+        {{#each type}}
+            <code>{{json_schema__datatype .. .}}</code>
+            {{#unless @last}} or {{/unless}}
+        {{else}}
+            <code>{{json_schema__datatype . type}}</code>
+        {{/each}}
+    {{else}}
+        any type
+    {{/if}}
+{{/json-schema/util/section}}
