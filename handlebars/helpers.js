@@ -13,9 +13,10 @@ module.exports = {
   json_schema__string_restrictions,
   json_schema__could_be_numeric,
   json_schema__could_be_of_type,
-  json_schema__array_item_restrictions,
+  json_schema__array_length,
   json_schema__doclink,
-  json_schema__is_array
+  json_schema__is_array,
+  json_schema__split_coma
 }
 
 /**
@@ -140,13 +141,15 @@ function json_schema__string_restrictions (schema, options) {
   ].filter(x => x)
 }
 
-function json_schema__array_item_restrictions (schema, options) {
-  return [
-    schema.minItems != null && schema.maxItems != null && `The array must have ${schema.minItems} to ${schema.maxItems} items.`,
-    schema.minItems == null && schema.maxItems != null && `The array must have at most ${schema.maxItems} items.`,
-    schema.minItems != null && schema.maxItems == null && `The array must have at least ${schema.minItems} items.`,
-    schema.uniqueItems != null && 'The items of the array must be unique'
-  ].filter(x => x)
+function json_schema__array_length (schema) {
+  if (schema.minItems != null && schema.maxItems != null) {
+    return `The array must have ${schema.minItems} to ${schema.maxItems} items.`
+  } else if (schema.minItems == null && schema.maxItems != null) {
+    return `The array must have at most ${schema.maxItems} items.`
+  } else if (schema.minItems != null && schema.maxItems == null) {
+    return `The array must have at least ${schema.minItems} items.`
+  }
+  return null
 }
 
 function safe (strings, ...values) {
@@ -162,17 +165,22 @@ function safe (strings, ...values) {
  */
 function json_schema__doclink (sectionName, options) {
   let section = sections[sectionName]
-  let description = descriptions[sectionName]
-  let text = ''
-  if (options && options.hash && options.hash.text) {
-    text = description
-  }
-  return safe`${text} (<a href="${schemaBase}-${section}" title="${description}">🛈 ${section}</a>)`
+  return safe`${sectionName} (<a href="${schemaBase}-${section}">${section}</a>)`
+}
+
+/**
+ *
+ * @param {string} list a coma-separated list of strings
+ * @return {string[]} the list items
+ */
+function json_schema__split_coma (list) {
+  return list.split(',').map(item => item.trim())
 }
 
 const schemaBase = 'https://tools.ietf.org/html/draft-wright-json-schema-validation-01#section'
 
 const descriptions = {
+  'type': 'The value\'s type must be',
   'items': 'All items must match the following schema',
   'items_array': 'The first items must match the following schemas',
   'contains': 'At least one item must match the following schema',
@@ -180,10 +188,14 @@ const descriptions = {
 }
 
 const sections = {
+  'type': '6.25',
   'items': '6.9',
+  'additionalItems': '6.10',
   'items_array': '6.9',
+  'minItems': '6.11',
+  'maxItems': '6.12',
+  'uniqueItems': '6.13',
   'contains': '6.14',
-  'additionalItems': '6.10'
 }
 
 function json_schema__is_array (value) {

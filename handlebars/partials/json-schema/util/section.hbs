@@ -2,9 +2,17 @@
    Helper partial to render a restriction (array, numeric etc).
    Use as block-partial
 
+   @param {string} sections a coma-separated list of section names (i.e. items, additionalItems)
    @param {string} title a title for the restrictions
 --}}
 <section class="json-schena--section">
-    <div class="header">{{title}}</div>
-    <div class="contents">{{>@partial-block}}</div>
+    <div class="header">
+        {{#each (json_schema__split_coma sections)}}
+            {{json_schema__doclink .}}
+        {{/each}}
+    </div>
+    <div class="contents">
+        {{title}}
+        {{>@partial-block}}
+    </div>
 </section>
