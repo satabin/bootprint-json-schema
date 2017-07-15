@@ -15,12 +15,17 @@
     margin-top: -19px;
     margin-left: -19px;
     margin-bottom: 10px;
+    margin-right: -19px;
     padding: 2px;
     border: 1px solid @well-border;
     border-radius: @border-radius-base;
   }
-}
 
+  .json-schema--required {
+    .label();
+    .label-default();
+  }
+}
 
 .json-schema--schema {
   section {
@@ -38,4 +43,13 @@
       .make-md-column(10);
     }
   }
+}
+
+.json-schema--regex > b {
+  font-weight: bolder;
+  font-size: 120%;
+  font-weight: 800;
+  color: @text-color;
+  padding: 0.25em;
+  padding-right: 0.25em;
 }

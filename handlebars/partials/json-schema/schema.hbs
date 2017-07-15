@@ -4,6 +4,9 @@
 --}}
 <div class="json-schema--schema">
     {{>json-schema/type .}}
+    {{>json-schema/string .}}
+    {{>json-schema/number .}}
+    {{>json-schema/object .}}
     {{#if enum}}
         <dd>Allowed values (enum)</dd>
         <dt data-schema-property="enum">
@@ -14,30 +17,6 @@
         </ul>
         </dt>
     {{/if}}
-{{!--    {{#if (json_schema__could_be_numeric)}}
-        <dd>If the value is a number:</dd>
-        <dt data-schema-property="numeric">
-        <ul class="list-inline">
-            {{#each (json_schema__numeric_restrictions .)}}
-                <li>{{.}}</li>
-            {{else}}
-                <li>none</li>
-            {{/each}}
-        </ul>
-        </dt>
-    {{/if}}
-    {{#if (json_schema__could_be_of_type 'string')}}
-        <dd>String restrictions:</dd>
-        <dt data-schema-property="numeric">
-        <ul class="list-inline">
-            {{#each (json_schema__string_restrictions .)}}
-                <li>{{.}}</li>
-            {{else}}
-                <li>none</li>
-            {{/each}}
-        </ul>
-        </dt>
-    {{/if}}--}}
     {{#if (json_schema__could_be_of_type 'array')}}
         {{> json-schema/array .}}
     {{/if}}

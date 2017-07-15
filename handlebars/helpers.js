@@ -10,13 +10,17 @@ module.exports = {
   json_schema__datatype,
   json_schema__subschema_name,
   json_schema__numeric_restrictions,
-  json_schema__string_restrictions,
+  json_schema__string_length,
+  json_schema__number_range,
+  json_schema__object_size,
   json_schema__could_be_numeric,
   json_schema__could_be_of_type,
   json_schema__array_length,
   json_schema__doclink,
   json_schema__is_array,
-  json_schema__split_coma
+  json_schema__split_coma,
+  json_schema__is_required,
+  json_schema__enumerate
 }
 
 /**
@@ -133,21 +137,56 @@ function json_schema__numeric_restrictions (schema) {
   ].filter(x => x)
 }
 
-function json_schema__string_restrictions (schema, options) {
-  return [
-    schema.minLength != null && `x.length ≥ ${schema.minLength}`,
-    schema.maxLength != null && `x.length ≤ ${schema.maxLength}`,
-    schema.pattern != null && safe`x matches <span class="json-schema--regex">${schema.pattern}</span>`
-  ].filter(x => x)
+function json_schema__string_length (schema, options) {
+  return range(schema.minLength, false, schema.maxLength, false, 'string.length')
+}
+
+function json_schema__is_required (schema, propertyName) {
+  return schema.required && schema.required.indexOf(propertyName) >= 0
 }
 
 function json_schema__array_length (schema) {
-  if (schema.minItems != null && schema.maxItems != null) {
-    return `The array must have ${schema.minItems} to ${schema.maxItems} items.`
-  } else if (schema.minItems == null && schema.maxItems != null) {
-    return `The array must have at most ${schema.maxItems} items.`
-  } else if (schema.minItems != null && schema.maxItems == null) {
-    return `The array must have at least ${schema.minItems} items.`
+  return range(schema.minItems, false, schema.maxItems, false, 'array.length')
+}
+
+function json_schema__object_size (schema) {
+  return range(schema.minProperties, false, schema.maxProperties, false, '# properties')
+}
+
+function json_schema__number_range (schema) {
+  let min = schema.minimum
+  let max = schema.maximum
+  let minExclusive = schema.exclusiveMinimum
+  let maxExclusive = schema.exclusiveMaximum
+  // Convert draft 6 to draft 4
+  if (typeof minExclusive === 'number') {
+    min = minExclusive
+    minExclusive = true
+  }
+  if (typeof maxExclusive === 'number') {
+    max = maxExclusive
+    maxExclusive = true
+  }
+  return range(min, minExclusive, max, maxExclusive, 'x')
+}
+
+/**
+ * Render a range based on several
+ * @param {number} min the minimal value or null if not present
+ * @param {boolean} minExclusive whether "min" is outside the range
+ * @param {number} max the maximal value or null if not present
+ * @param {boolean} maxExclusive whether "max" is outside the range
+ * @param {string} what a description for the current value
+ */
+function range (min, minExclusive, max, maxExclusive, what) {
+  if (min != null && max != null) {
+    return `${min} ${minExclusive ? '<' : '≤'} ${what} ${maxExclusive ? '<' : '≤'} ${max}`
+  }
+  if (min != null && max == null) {
+    return `${what} ${minExclusive ? '>' : '≥'} ${min} `
+  }
+  if (min == null && max != null) {
+    return `${what} ${maxExclusive ? '<' : '≤'} ${max}`
   }
   return null
 }
@@ -165,7 +204,7 @@ function safe (strings, ...values) {
  */
 function json_schema__doclink (sectionName, options) {
   let section = sections[sectionName]
-  return safe`${sectionName} (<a href="${schemaBase}-${section}">${section}</a>)`
+  return safe`${sectionName} (<a href="${draft06}-${section}">${section}</a>)`
 }
 
 /**
@@ -177,27 +216,56 @@ function json_schema__split_coma (list) {
   return list.split(',').map(item => item.trim())
 }
 
-const schemaBase = 'https://tools.ietf.org/html/draft-wright-json-schema-validation-01#section'
-
-const descriptions = {
-  'type': 'The value\'s type must be',
-  'items': 'All items must match the following schema',
-  'items_array': 'The first items must match the following schemas',
-  'contains': 'At least one item must match the following schema',
-  'additionalItems': 'Additional items must match the following schema'
-}
+const draft06 = 'https://tools.ietf.org/html/draft-wright-json-schema-validation-01#section'
+// const draft04 = 'https://tools.ietf.org/html/draft-fge-json-schema-validation-00'
 
 const sections = {
-  'type': '6.25',
+  'multipeOf': '6.1',
+  'maximum': '6.2',
+  'exclusiveMaximum': '6.3',
+  'minimum': '6.4',
+  'exclusiveMinimum': '6.5',
+  'maxLength': '6.6',
+  'minLength': '6.7',
+  'pattern': '6.8',
   'items': '6.9',
-  'additionalItems': '6.10',
   'items_array': '6.9',
+  'additionalItems': '6.10',
   'minItems': '6.11',
   'maxItems': '6.12',
   'uniqueItems': '6.13',
   'contains': '6.14',
+  'minProperties': '6.15',
+  'maxProperties': '6.16',
+  'required': '6.17',
+  'properties': '6.18',
+  'patternProperties': '6.19',
+  'additionalProperties': '6.20',
+  'dependencies': '6.21',
+  'propertyNames': '6.22',
+  'type': '6.25'
 }
 
 function json_schema__is_array (value) {
   return Array.isArray(value)
+}
+
+/**
+ * Convert an array into a prose-enumeration
+ * @param {string[]} items an array of strings (e.g. ['a','b','c'])
+ * @return an written enumeration (a,b and c)
+ */
+function json_schema__enumerate (items, options) {
+  return items.map((item, index, array) => {
+    item = options.fn(item)
+    // Add coma after each but the two last items
+    if (index < array.length - 2) {
+      return item + ', '
+    }
+    // Add "and" after the next-to-last item
+    if (index === array.length - 2) {
+      return item + ' and '
+    }
+    return item
+  }).join('')
 }

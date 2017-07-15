@@ -14,19 +14,19 @@
     "two_to_three": {
       "type": "number",
       "maximum": 3.0,
-      "maximumExclusive": true,
+      "exclusiveMaximum": true,
       "minimum": 2.0,
-      "minimumExclusive": true
+      "exclusiveMinimum": true
     },
     "less_than_three": {
       "type": "number",
       "maximum": 3.0,
-      "maximumExclusive": true
+      "exclusiveMaximum": true
     },
     "more_than_two": {
       "type": "number",
       "minimum": 2.0,
-      "minimumExclusive": true
+      "exclusiveMinimum": true
     },
     "multiples_of_three": {
       "multipleOf": 3
@@ -35,9 +35,9 @@
       "type": "number",
       "multipleOf": 3,
       "maximum": 16.0,
-      "maximumExclusive": true,
+      "exclusiveMaximum": true,
       "minimum": 2.0,
-      "minimumExclusive": true
+      "exclusiveMinimum": true
     }
   }
 }
