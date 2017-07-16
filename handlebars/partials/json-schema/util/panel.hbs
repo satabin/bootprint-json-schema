@@ -1,11 +1,13 @@
 {{!
     Renders a bootstrap-panel
     @public
-    @param {string} type
+    @param {string} panelTitle
+    @param {string} panelId
+    @param {string} panelType
     @readonly
 }}
-<div {{#if title}}id="{{panelType}}-{{htmlId title}}"{{/if}} class="panel panel-{{panelType}}">
-    {{#if title}}
+<div {{#if panelId}}id="{{panelId}}"{{/if}} class="panel panel-{{panelType}}">
+    {{#if panelTitle}}
         <div class="panel-heading">
             <h3 class="panel-title">
                 {{panelTitle}}

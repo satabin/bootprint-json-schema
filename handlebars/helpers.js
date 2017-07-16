@@ -1,4 +1,5 @@
 var Handlebars = require('handlebars')
+var {htmlId} = require('bootprint-base/handlebars/helpers')
 
 /* eslint-disable camelcase */
 
@@ -9,6 +10,7 @@ var Handlebars = require('handlebars')
 module.exports = {
   json_schema__datatype,
   json_schema__subschema_name,
+  json_schema__definition_id,
   json_schema__numeric_restrictions,
   json_schema__string_length,
   json_schema__number_range,
@@ -94,6 +96,10 @@ function json_schema__datatype (schema, types) {
  */
 function json_schema__subschema_name (url) {
   return url.replace('#/definitions/', '')
+}
+
+function json_schema__definition_id (name) {
+  return `definitions-${htmlId(name)}`
 }
 
 /**
