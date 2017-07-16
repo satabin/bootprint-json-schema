@@ -4,12 +4,21 @@
 
 
 .panel-definition {
-  .panel-variant(@definition-panel-border-color, @definition-panel-header-text-color, @definition-panel-header-bg-color, @definition-panel-border-color);
+  .panel-default();
 
   .panel-body {
     .json-schema--inline-metadata()
   }
 }
+
+.panel-main {
+  .panel-primary();
+
+  .panel-body {
+    .json-schema--inline-metadata()
+  }
+}
+
 
 
 .json-schema--subschema {
@@ -135,4 +144,14 @@
   }
 }
 
+.json-schema--definition-key {
+  &:after {
+    content: "-";
+    margin-left: 1em;
+    margin-right: 1em;
+  }
 
+  &:last-child:after {
+    contents: "";
+  }
+}

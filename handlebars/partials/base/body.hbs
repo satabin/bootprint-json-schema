@@ -4,7 +4,10 @@
    what should be displayed.
    @public
 --}}
-{{>json-schema/schema}}
+
+{{#>json-schema/util/panel panelType='main' panelTitle=title}}
+    {{>json-schema/schema title=''}}
+{{/json-schema/util/panel}}
 {{#if definitions}}
     <h2>Definitions</h2>
     {{>json-schema/definitions}}

@@ -1,13 +1,14 @@
 {{!
     Renders a bootstrap-panel
     @public
+    @param {string} type
     @readonly
 }}
-<div {{#if title}}id="definitions-{{htmlId title}}"{{/if}} class="panel panel-definition">
+<div {{#if title}}id="{{panelType}}-{{htmlId title}}"{{/if}} class="panel panel-{{panelType}}">
     {{#if title}}
         <div class="panel-heading">
             <h3 class="panel-title">
-                {{title}}
+                {{panelTitle}}
             </h3>
         </div>
     {{/if}}

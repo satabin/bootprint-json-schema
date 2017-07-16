@@ -21,7 +21,8 @@ module.exports = {
   json_schema__split_coma,
   json_schema__is_required,
   json_schema__has_any,
-  json_schema__enumerate
+  json_schema__enumerate,
+  json_schema__definition_title
 }
 
 /**
@@ -93,6 +94,20 @@ function json_schema__datatype (schema, types) {
  */
 function json_schema__subschema_name (url) {
   return url.replace('#/definitions/', '')
+}
+
+/**
+ * Creat the title for a definition panel
+ *
+ * @param {string} key the key of the schema within the definitions
+ * @param {string} schema the schema
+ *
+ */
+function json_schema__definition_title (key, schema) {
+  return safe`
+<span class="json-schema--definition-key">#/definitions/${key}</span>
+<span class="json-schema-definition-title">${schema.title}</span>
+`
 }
 
 /**
