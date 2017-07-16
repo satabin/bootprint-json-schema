@@ -3,21 +3,28 @@
     @this {object} the json-schema
 --}}
 <div class="json-schema--schema">
-    {{>json-schema/type .}}
-    {{>json-schema/string .}}
-    {{>json-schema/number .}}
-    {{>json-schema/object .}}
-    {{#if enum}}
-        <dd>Allowed values (enum)</dd>
-        <dt data-schema-property="enum">
-        <ul class="list-inline">
-            {{#each enum}}
-                <li>{{json . space=0}}</li>
-            {{/each}}
-        </ul>
-        </dt>
-    {{/if}}
-    {{#if (json_schema__could_be_of_type 'array')}}
-        {{> json-schema/array .}}
+    <div class="json-schema--meta-data">
+        {{#if title}}
+            <div class="json-schema--title">{{title}}</div>
+        {{/if}}
+        {{#if description}}
+            <div class="json-schema--description">{{md description}}</div>
+        {{/if}}
+    </div>
+    {{#if $ref}}
+        {{>json-schema/ref .}}
+    {{else}}
+        {{>json-schema/type .}}
+        {{>json-schema/string .}}
+        {{>json-schema/number .}}
+        {{>json-schema/object .}}
+        {{>json-schema/enum .}}
+        {{>json-schema/const .}}
+        {{>json-schema/array .}}
+        {{>json-schema/allOf .}}
+        {{>json-schema/oneOf .}}
+        {{>json-schema/anyOf .}}
+        {{>json-schema/not .}}
+        {{>json-schema/examples-default .}}
     {{/if}}
 </div>

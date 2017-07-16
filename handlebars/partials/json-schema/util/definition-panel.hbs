@@ -3,12 +3,10 @@
     @public
     @readonly
 }}
-<div {{#if title}}id="definition-{{htmlId title}}"{{/if}} class="panel panel-definition">
+<div {{#if title}}id="definitions-{{htmlId title}}"{{/if}} class="panel panel-definition">
     {{#if title}}
         <div class="panel-heading">
-
             <h3 class="panel-title">
-                {{#if anchor}}<a name="/definitions/{{title}}"></a>{{/if}}
                 {{title}}
             </h3>
         </div>

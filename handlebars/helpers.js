@@ -20,6 +20,7 @@ module.exports = {
   json_schema__is_array,
   json_schema__split_coma,
   json_schema__is_required,
+  json_schema__has_any,
   json_schema__enumerate
 }
 
@@ -243,11 +244,26 @@ const sections = {
   'additionalProperties': '6.20',
   'dependencies': '6.21',
   'propertyNames': '6.22',
-  'type': '6.25'
+  'enum': '6.23',
+  'const': '6.24',
+  'type': '6.25',
+  'allOf': '6.26',
+  'anyOf': '6.27',
+  'oneOf': '6.28',
+  'not': '6.29',
+  'default': '7.3',
+  'examples': '7.4'
 }
 
 function json_schema__is_array (value) {
   return Array.isArray(value)
+}
+
+function json_schema__has_any (schema, ...properties) {
+  var realProperties = properties.slice(0, properties.length - 1)
+  return realProperties.reduce((found, current) => {
+    return found || schema[current] != null
+  }, false)
 }
 
 /**

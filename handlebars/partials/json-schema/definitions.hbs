@@ -1,8 +1,8 @@
 {{!Renders all subschemas}}
 {{#if definitions}}
     {{#eachSorted definitions}}
-        {{#>json-schema/util/panel title=@key anchor=true}}
+        {{#>json-schema/util/definition-panel title=@key}}
             {{>json-schema/schema .}}
-        {{/json-schema/util/panel}}
+        {{/json-schema/util/definition-panel}}
     {{/eachSorted}}
 {{/if}}

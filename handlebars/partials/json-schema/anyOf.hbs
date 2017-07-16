@@ -1,0 +1,9 @@
+{{#if anyOf}}
+    {{#>json-schema/util/section sections='anyOf' title='Must match exactly any of the following schemas'}}
+        {{#each anyOf}}
+            <div class="json-schema--subschema">
+                {{>json-schema/schema .}}
+            </div>
+        {{/each}}
+    {{/json-schema/util/section}}
+{{/if}}
