@@ -29,8 +29,8 @@
   &-header {
     margin: -19px -19px 10px;
     padding: 2px;
-    border: 1px solid @well-border;
-    border-radius: @border-radius-base;
+    border-bottom: 1px solid @well-border;
+    border-radius: 0;
   }
 
   .json-schema--required {
@@ -80,8 +80,20 @@
 
     > .contents {
       .make-md-column(10);
+
+      > .json-schema--subschema-group {
+        border-left: 0.5em solid darken(@well-border, 10%);
+        border-radius: 3px;
+        padding: 0 0 0 0em;
+
+        > .json-schema--subschema {
+          border-top-left-radius: 0px;
+          border-bottom-left-radius: 0px;
+        }
+      }
     }
   }
+
 }
 
 .json-schema--regex > b {
@@ -150,6 +162,10 @@
   }
 
   &:last-child:after {
-    contents: "";
+    content: "";
   }
+}
+
+.json-schema--section-links {
+  white-space: nowrap;
 }

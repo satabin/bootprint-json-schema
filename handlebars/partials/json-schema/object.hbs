@@ -1,6 +1,25 @@
 {{#if (json_schema__could_be_of_type 'object')}}
+
+    {{#with (json_schema__object_size .) as | text |}}
+        {{#if text}}
+            {{#>json-schema/util/section sections='minProperties, maxProperties' title='Object Size'}}
+                {{text}}
+            {{/json-schema/util/section}}
+        {{/if}}
+    {{/with}}
+
+    {{#if required}}
+        {{#>json-schema/util/section sections='required' title='Required properties'}}
+            <ul class="list-inline">
+                {{#each required}}
+                    <li>{{.}}</li>
+                {{/each}}
+            </ul>
+        {{/json-schema/util/section}}
+    {{/if}}
+
     {{#if properties}}
-        {{#>json-schema/util/section sections='properties' title='These properties must match their respective schema'}}
+        {{#>json-schema/util/section sections='properties' title='Properties'}}
             {{#each properties}}
                 <div class="json-schema--subschema">
                     <div class="json-schema--subschema-header">
@@ -33,14 +52,6 @@
         {{/json-schema/util/section}}
     {{/if}}
 
-    {{#if propertyNames}}
-        {{#>json-schema/util/section sections='propertyNames' title='Property Names must match'}}
-            <div class="json-schema--subschema">
-                {{>json-schema/schema propertyNames}}
-            </div>
-        {{/json-schema/util/section}}
-    {{/if}}
-
     {{#if dependencies}}
         {{#>json-schema/util/section sections='dependencies' title='Dependencies'}}
             {{#each dependencies}}
@@ -63,21 +74,12 @@
         {{/json-schema/util/section}}
     {{/if}}
 
-    {{#with (json_schema__object_size .) as | text |}}
-        {{#if text}}
-            {{#>json-schema/util/section sections='minProperties, maxProperties' title='Number of properties'}}
-                {{text}}
-            {{/json-schema/util/section}}
-        {{/if}}
-    {{/with}}
 
-    {{#if required}}
-        {{#>json-schema/util/section sections='required' title='Required properties'}}
-            <ul class="list-inline">
-                {{#each required}}
-                    <li>{{.}}</li>
-                {{/each}}
-            </ul>
+    {{#if propertyNames}}
+        {{#>json-schema/util/section sections='propertyNames' title='Property Names'}}
+            <div class="json-schema--subschema">
+                {{>json-schema/schema propertyNames}}
+            </div>
         {{/json-schema/util/section}}
     {{/if}}
 

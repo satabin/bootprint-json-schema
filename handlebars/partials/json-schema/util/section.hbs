@@ -7,9 +7,11 @@
 --}}
 <section class="json-schena--section">
     <div class="header" title="{{title}}">
-        {{#each (json_schema__split_coma sections)}}
-            {{json_schema__doclink .}}
-        {{/each}}
+        {{title}}
+        <span class="json-schema--section-links">({{#each (json_schema__split_coma sections)~}}
+            {{json_schema__doclink .}}{{#unless @last}}, {{/unless}}
+        {{~/each}})
+        </span>
     </div>
     <div class="contents">
         {{>@partial-block}}

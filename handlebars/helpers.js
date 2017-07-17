@@ -23,8 +23,7 @@ module.exports = {
   json_schema__split_coma,
   json_schema__is_required,
   json_schema__has_any,
-  json_schema__enumerate,
-  json_schema__definition_title
+  json_schema__enumerate
 }
 
 /**
@@ -103,20 +102,6 @@ function json_schema__definition_id (name) {
 }
 
 /**
- * Creat the title for a definition panel
- *
- * @param {string} key the key of the schema within the definitions
- * @param {string} schema the schema
- *
- */
-function json_schema__definition_title (key, schema) {
-  return safe`
-<span class="json-schema--definition-key">#/definitions/${key}</span>
-<span class="json-schema-definition-title">${schema.title}</span>
-`
-}
-
-/**
  * Computes numeric restrictions based on properties of the given json-schema.
  *
  * If exclusiveMinimum or exclusiveMaximum is a boolean, it will be treated as defined in
@@ -160,7 +145,7 @@ function json_schema__numeric_restrictions (schema) {
 }
 
 function json_schema__string_length (schema, options) {
-  return range(schema.minLength, false, schema.maxLength, false, 'string.length')
+  return countRange(schema.minLength, schema.maxLength, 'characters')
 }
 
 function json_schema__is_required (schema, propertyName) {
@@ -168,11 +153,24 @@ function json_schema__is_required (schema, propertyName) {
 }
 
 function json_schema__array_length (schema) {
-  return range(schema.minItems, false, schema.maxItems, false, 'array.length')
+  return countRange(schema.minItems, schema.maxItems, 'items')
 }
 
 function json_schema__object_size (schema) {
-  return range(schema.minProperties, false, schema.maxProperties, false, '# properties')
+  return countRange(schema.minProperties, schema.maxProperties, 'properties')
+}
+
+function countRange (min, max, what) {
+  if (min != null && max != null) {
+    return `${min} to ${max} ${what}`
+  }
+  if (min != null && max == null) {
+    return `at least ${min} ${what}`
+  }
+  if (min == null && max != null) {
+    return `at most ${max} ${what}`
+  }
+  return null
 }
 
 function json_schema__number_range (schema) {
@@ -226,7 +224,7 @@ function safe (strings, ...values) {
  */
 function json_schema__doclink (sectionName, options) {
   let section = sections[sectionName]
-  return safe`${sectionName} (<a href="${draft06}-${section}">${section}</a>)`
+  return safe`<a href="${draft06}-${section}">${section}</a>`
 }
 
 /**
@@ -242,7 +240,7 @@ const draft06 = 'https://tools.ietf.org/html/draft-wright-json-schema-validation
 // const draft04 = 'https://tools.ietf.org/html/draft-fge-json-schema-validation-00'
 
 const sections = {
-  'multipeOf': '6.1',
+  'multipleOf': '6.1',
   'maximum': '6.2',
   'exclusiveMaximum': '6.3',
   'minimum': '6.4',

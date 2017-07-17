@@ -1,9 +1,11 @@
 {{#if allOf}}
-    {{#>json-schema/util/section sections='allOf' title='Must match all of the following schemas'}}
-        {{#each allOf}}
-            <div class="json-schema--subschema">
-                {{>json-schema/schema .}}
-            </div>
-        {{/each}}
+    {{#>json-schema/util/section sections='allOf' title='Must match all of'}}
+        <div class="json-schema--subschema-group">
+            {{#each allOf}}
+                <div class="json-schema--subschema">
+                    {{>json-schema/schema .}}
+                </div>
+            {{/each}}
+        </div>
     {{/json-schema/util/section}}
 {{/if}}

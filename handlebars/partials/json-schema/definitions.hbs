@@ -1,12 +1,14 @@
 {{!Renders all subschemas}}
 {{#if definitions}}
     {{#eachSorted definitions}}
-        {{#>json-schema/util/panel
-                panelType='definition'
-                panelTitle=(json_schema__definition_title @key .)
-                panelId=(json_schema__definition_id @key)
-        }}
+        {{#>json-schema/util/panel panelType='definition' hasTitle=true panelId=(json_schema__definition_id @key)}}
+            {{#*inline "title"}}
+                <span class="json-schema--definition-key">#/definitions/{{@key}}</span>
+                {{#if title}}<span class="json-schema-definition-title">{{title}}</span>{{/if}}
+            {{/inline}}
+            {{! Call schema without title, title is already rendered in the panel header}}
             {{>json-schema/schema . title=''}}
         {{/json-schema/util/panel}}
+
     {{/eachSorted}}
 {{/if}}
