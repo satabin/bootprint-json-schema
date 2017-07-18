@@ -12,18 +12,16 @@ module.exports = {
   json_schema__subschema_name,
   json_schema__definition_id,
   json_schema__numeric_restrictions,
-  json_schema__string_length,
   json_schema__number_range,
-  json_schema__object_size,
   json_schema__could_be_numeric,
   json_schema__could_be_of_type,
-  json_schema__array_length,
   json_schema__doclink,
   json_schema__is_array,
   json_schema__split_coma,
   json_schema__is_required,
   json_schema__has_any,
-  json_schema__enumerate
+  json_schema__enumerate,
+  json_schema__count_range
 }
 
 /**
@@ -144,32 +142,21 @@ function json_schema__numeric_restrictions (schema) {
   ].filter(x => x)
 }
 
-function json_schema__string_length (schema, options) {
-  return countRange(schema.minLength, schema.maxLength, 'characters')
-}
-
 function json_schema__is_required (schema, propertyName) {
   return schema.required && schema.required.indexOf(propertyName) >= 0
 }
 
-function json_schema__array_length (schema) {
-  return countRange(schema.minItems, schema.maxItems, 'items')
-}
+function json_schema__count_range (min, max, singular, plural) {
+  if (min == null && max == null) return null
+  if (min === 1 && max == null) { return `at least one ${singular}` }
+  if (min == null && max === 1) { return `at most one ${singular}` }
+  if (min === 1 && max === 1) { return `exactly one ${singular}` }
 
-function json_schema__object_size (schema) {
-  return countRange(schema.minProperties, schema.maxProperties, 'properties')
-}
+  if (min != null && max == null) { return `at least ${min} ${plural}` }
+  if (min == null && max != null) { return `at most ${max} ${plural}` }
+  if (min === max) { return `exactly ${max} ${plural}` }
 
-function countRange (min, max, what) {
-  if (min != null && max != null) {
-    return `${min} to ${max} ${what}`
-  }
-  if (min != null && max == null) {
-    return `at least ${min} ${what}`
-  }
-  if (min == null && max != null) {
-    return `at most ${max} ${what}`
-  }
+  if (min != null && max != null) { return `${min} to ${max} ${plural}` }
   return null
 }
 
@@ -222,8 +209,8 @@ function safe (strings, ...values) {
  * @param {string} sectionName the section name (e.g. items)
  * @param options
  */
-function json_schema__doclink (sectionName, options) {
-  let section = sections[sectionName]
+function json_schema__doclink (type, sectionName) {
+  let section = sections[type][sectionName]
   return safe`<a href="${draft06}-${section}">${section}</a>`
 }
 
@@ -240,38 +227,51 @@ const draft06 = 'https://tools.ietf.org/html/draft-wright-json-schema-validation
 // const draft04 = 'https://tools.ietf.org/html/draft-fge-json-schema-validation-00'
 
 const sections = {
-  'multipleOf': '6.1',
-  'maximum': '6.2',
-  'exclusiveMaximum': '6.3',
-  'minimum': '6.4',
-  'exclusiveMinimum': '6.5',
-  'maxLength': '6.6',
-  'minLength': '6.7',
-  'pattern': '6.8',
-  'items': '6.9',
-  'items_array': '6.9',
-  'additionalItems': '6.10',
-  'minItems': '6.11',
-  'maxItems': '6.12',
-  'uniqueItems': '6.13',
-  'contains': '6.14',
-  'minProperties': '6.15',
-  'maxProperties': '6.16',
-  'required': '6.17',
-  'properties': '6.18',
-  'patternProperties': '6.19',
-  'additionalProperties': '6.20',
-  'dependencies': '6.21',
-  'propertyNames': '6.22',
-  'enum': '6.23',
-  'const': '6.24',
-  'type': '6.25',
-  'allOf': '6.26',
-  'anyOf': '6.27',
-  'oneOf': '6.28',
-  'not': '6.29',
-  'default': '7.3',
-  'examples': '7.4'
+  keywords: {
+    'multipleOf': '6.1',
+    'maximum': '6.2',
+    'exclusiveMaximum': '6.3',
+    'minimum': '6.4',
+    'exclusiveMinimum': '6.5',
+    'maxLength': '6.6',
+    'minLength': '6.7',
+    'pattern': '6.8',
+    'items': '6.9',
+    'items_array': '6.9',
+    'additionalItems': '6.10',
+    'minItems': '6.11',
+    'maxItems': '6.12',
+    'uniqueItems': '6.13',
+    'contains': '6.14',
+    'minProperties': '6.15',
+    'maxProperties': '6.16',
+    'required': '6.17',
+    'properties': '6.18',
+    'patternProperties': '6.19',
+    'additionalProperties': '6.20',
+    'dependencies': '6.21',
+    'propertyNames': '6.22',
+    'enum': '6.23',
+    'const': '6.24',
+    'type': '6.25',
+    'allOf': '6.26',
+    'anyOf': '6.27',
+    'oneOf': '6.28',
+    'not': '6.29',
+    'default': '7.3',
+    'examples': '7.4',
+    'format': '8'
+  },
+  formats: {
+    'date-time': '8.3.1',
+    'email': '8.3.2',
+    'hostname': '8.3.3',
+    'ipv4': '8.3.4',
+    'ipv6': '8.3.5',
+    'uri': '8.3.6',
+    'uri-reference': '8.3.7',
+    'json-pointer': '8.3.9'
+  }
 }
 
 function json_schema__is_array (value) {
@@ -279,10 +279,8 @@ function json_schema__is_array (value) {
 }
 
 function json_schema__has_any (schema, ...properties) {
-  var realProperties = properties.slice(0, properties.length - 1)
-  return realProperties.reduce((found, current) => {
-    return found || schema[current] != null
-  }, false)
+  const realProperties = properties.slice(0, properties.length - 1)
+  return realProperties.find(keyword => schema[keyword] != null)
 }
 
 /**

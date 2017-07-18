@@ -6,7 +6,7 @@
         {{/json-schema/util/section}}
     {{/if}}
 
-    {{#with (json_schema__array_length .) as | text |}}
+    {{#with (json_schema__count_range minItems maxItems 'item' 'items') as | text |}}
         {{#if text}}
             {{#>json-schema/util/section sections='minItems, maxItems' title='Array length'}}
                 {{text}}

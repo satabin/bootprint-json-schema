@@ -1,6 +1,6 @@
 {{#if (json_schema__could_be_of_type 'object')}}
 
-    {{#with (json_schema__object_size .) as | text |}}
+    {{#with (json_schema__count_range minProperties maxProperties 'property' 'properties') as | text |}}
         {{#if text}}
             {{#>json-schema/util/section sections='minProperties, maxProperties' title='Object Size'}}
                 {{text}}
@@ -10,11 +10,7 @@
 
     {{#if required}}
         {{#>json-schema/util/section sections='required' title='Required properties'}}
-            <ul class="list-inline">
-                {{#each required}}
-                    <li>{{.}}</li>
-                {{/each}}
-            </ul>
+            {{#json_schema__enumerate required}}<code>{{.}}</code>{{/json_schema__enumerate}}
         {{/json-schema/util/section}}
     {{/if}}
 

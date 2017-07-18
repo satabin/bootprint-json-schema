@@ -9,7 +9,7 @@
     <div class="header" title="{{title}}">
         {{title}}
         <span class="json-schema--section-links">({{#each (json_schema__split_coma sections)~}}
-            {{json_schema__doclink .}}{{#unless @last}}, {{/unless}}
+            {{json_schema__doclink 'keywords' .}}{{#unless @last}}, {{/unless}}
         {{~/each}})
         </span>
     </div>
