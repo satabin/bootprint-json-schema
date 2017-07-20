@@ -1,6 +1,7 @@
 {{!Renders all subschemas}}
 {{#if definitions}}
     {{#eachSorted definitions}}
+        <a name="{{json_schema__definition_id @key}}"></a>
         {{#>json-schema/util/panel panelType='definition' hasTitle=true panelId=(json_schema__definition_id @key)}}
             {{#*inline "title"}}
                 <span class="json-schema--definition-key">#/definitions/{{@key}}</span>
@@ -9,6 +10,5 @@
             {{! Call schema without title, title is already rendered in the panel header}}
             {{>json-schema/schema . title=''}}
         {{/json-schema/util/panel}}
-
     {{/eachSorted}}
 {{/if}}

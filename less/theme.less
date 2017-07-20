@@ -1,22 +1,51 @@
 @import "labels.less";
 @import "panels.less";
 @import "wells.less";
+@import "navs.less";
+@import "navbar.less";
+@import "dropdowns.less";
+
+@shiver-width: 7px;
+
+@keyframes json-schema--shiver {
+  0% {
+    margin-left: 0;
+  }
+  25% {
+    margin-left: @shiver-width;
+  }
+  50% {
+    margin-left: 0;
+  }
+  75% {
+    margin-left: -@shiver-width;
+  }
+  100% {
+    margin-left: 0;
+  }
+}
+
+.json-schema--target-shiver() {
+  &:target {
+    animation-duration: 0.3s;
+    animation-iteration-count: 2.5;
+    animation-timing-function: ease;
+    animation-name: json-schema--shiver;
+  }
+}
 
 .panel-definition {
   .panel-default();
+  .json-schema--target-shiver();
 
   .panel-body {
     .json-schema--inline-metadata()
-  }
-
-  &:target > .panel-heading {
-    border: 3px solid darken(@panel-default-border, 10%);
-    background-color: darken(@panel-default-heading-bg, 10%)
   }
 }
 
 .panel-main {
   .panel-primary();
+  .json-schema--target-shiver();
 
   .panel-body {
     .json-schema--inline-metadata()
@@ -39,7 +68,6 @@
   }
 
   .json-schema--inline-metadata()
-
 }
 
 .json-schema--inline-metadata() {
@@ -93,7 +121,6 @@
       }
     }
   }
-
 }
 
 .json-schema--regex > b {
@@ -168,4 +195,13 @@
 
 .json-schema--section-links {
   white-space: nowrap;
+}
+
+#json-schema--navigation-spacer {
+  height: @navbar-height + 10px;
+  overflow-x: auto;
+}
+
+.panel-top-link {
+  float: right;
 }
