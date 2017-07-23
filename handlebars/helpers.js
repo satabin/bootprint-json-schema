@@ -21,7 +21,9 @@ module.exports = {
   json_schema__is_required,
   json_schema__has_any,
   json_schema__enumerate,
-  json_schema__count_range
+  json_schema__count_range,
+  json_schema__version,
+  json_schema__is_version
 }
 
 /**
@@ -209,9 +211,15 @@ function safe (strings, ...values) {
  * @param {string} sectionName the section name (e.g. items)
  * @param options
  */
-function json_schema__doclink (type, sectionName) {
-  let section = sections[type][sectionName]
-  return safe`<a href="${draft06}-${section}">${section}</a>`
+function json_schema__doclink (type, sectionName, options) {
+  if (!options.data || !options.data.$root) {
+    throw new Error('Expected \'options\' to be a Handlebars options object')
+  }
+  let version = options.data.$root.$schema || defaultVersion
+  let versionMetadata = supportedVersions[version]
+  let name = versionMetadata.name
+  let section = versionMetadata.sections[type][sectionName]
+  return safe`<a href="${name}-${section}">${section}</a>`
 }
 
 /**
@@ -221,57 +229,6 @@ function json_schema__doclink (type, sectionName) {
  */
 function json_schema__split_coma (list) {
   return list.split(',').map(item => item.trim())
-}
-
-const draft06 = 'https://tools.ietf.org/html/draft-wright-json-schema-validation-01#section'
-// const draft04 = 'https://tools.ietf.org/html/draft-fge-json-schema-validation-00'
-
-const sections = {
-  keywords: {
-    'multipleOf': '6.1',
-    'maximum': '6.2',
-    'exclusiveMaximum': '6.3',
-    'minimum': '6.4',
-    'exclusiveMinimum': '6.5',
-    'maxLength': '6.6',
-    'minLength': '6.7',
-    'pattern': '6.8',
-    'items': '6.9',
-    'items_array': '6.9',
-    'additionalItems': '6.10',
-    'minItems': '6.11',
-    'maxItems': '6.12',
-    'uniqueItems': '6.13',
-    'contains': '6.14',
-    'minProperties': '6.15',
-    'maxProperties': '6.16',
-    'required': '6.17',
-    'properties': '6.18',
-    'patternProperties': '6.19',
-    'additionalProperties': '6.20',
-    'dependencies': '6.21',
-    'propertyNames': '6.22',
-    'enum': '6.23',
-    'const': '6.24',
-    'type': '6.25',
-    'allOf': '6.26',
-    'anyOf': '6.27',
-    'oneOf': '6.28',
-    'not': '6.29',
-    'default': '7.3',
-    'examples': '7.4',
-    'format': '8'
-  },
-  formats: {
-    'date-time': '8.3.1',
-    'email': '8.3.2',
-    'hostname': '8.3.3',
-    'ipv4': '8.3.4',
-    'ipv6': '8.3.5',
-    'uri': '8.3.6',
-    'uri-reference': '8.3.7',
-    'json-pointer': '8.3.9'
-  }
 }
 
 function json_schema__is_array (value) {
@@ -301,4 +258,143 @@ function json_schema__enumerate (items, options) {
     }
     return item
   }).join('')
+}
+
+const supportedVersions = {
+  'http://json-schema.org/draft-06/schema#': {
+    name: 'draft-06',
+    docLink: 'https://tools.ietf.org/html/draft-wright-json-schema-validation-01#section',
+    sections: {
+      keywords: {
+        'multipleOf': '6.1',
+        'maximum': '6.2',
+        'exclusiveMaximum': '6.3',
+        'minimum': '6.4',
+        'exclusiveMinimum': '6.5',
+        'maxLength': '6.6',
+        'minLength': '6.7',
+        'pattern': '6.8',
+        'items': '6.9',
+        'items_array': '6.9',
+        'additionalItems': '6.10',
+        'minItems': '6.11',
+        'maxItems': '6.12',
+        'uniqueItems': '6.13',
+        'contains': '6.14',
+        'minProperties': '6.15',
+        'maxProperties': '6.16',
+        'required': '6.17',
+        'properties': '6.18',
+        'patternProperties': '6.19',
+        'additionalProperties': '6.20',
+        'dependencies': '6.21',
+        'propertyNames': '6.22',
+        'enum': '6.23',
+        'const': '6.24',
+        'type': '6.25',
+        'allOf': '6.26',
+        'anyOf': '6.27',
+        'oneOf': '6.28',
+        'not': '6.29',
+        'default': '7.3',
+        'examples': '7.4',
+        'format': '8'
+      },
+      formats: {
+        'date-time': '8.3.1',
+        'email': '8.3.2',
+        'hostname': '8.3.3',
+        'ipv4': '8.3.4',
+        'ipv6': '8.3.5',
+        'uri': '8.3.6',
+        'uri-reference': '8.3.7',
+        'json-pointer': '8.3.9'
+      }
+    }
+  },
+  'http://json-schema.org/draft-04/schema#': {
+    name: 'draft-04',
+    docLink: 'https://tools.ietf.org/html/draft-fge-json-schema-validation-00',
+    sections: {
+      keywords: {
+        'multipleOf': '5.1.1',
+        'maximum': '5.1.2',
+        'exclusiveMaximum': '5.1.2',
+        'minimum': '5.1.3',
+        'exclusiveMinimum': '5.1.3',
+        'maxLength': '5.2.1',
+        'minLength': '5.2.2',
+        'pattern': '5.2.3',
+        'items': '5.3.1',
+        'items_array': '5.3.1',
+        'additionalItems': '5.3.1',
+        'minItems': '5.3.2',
+        'maxItems': '5.3.3',
+        'uniqueItems': '5.3.4',
+        // 'contains': // TODO: Not in draft-04
+        'minProperties': '5.4.2',
+        'maxProperties': '5.4.1',
+        'required': '5.4.3',
+        'properties': '5.4.4',
+        'patternProperties': '5.4.4', // TODO: Check again
+        'additionalProperties': '5.4.4',
+        'dependencies': '5.4.5',
+        // 'propertyNames': '6.22', // TODO: Not in draft-04
+        'enum': '5.5.1',
+        // 'const': // TODO: Not in draft-04
+        'type': '5.5.2',
+        'allOf': '5.5.3',
+        'anyOf': '5.5.4',
+        'oneOf': '5.5.5',
+        'not': '5.5.6',
+        'default': '6.2.1',
+        // 'examples': // TODO: Not in draft-04
+        'format': '7'
+      },
+      formats: {
+        'date-time': '7.3.1',
+        'email': '7.3.2',
+        'hostname': '7.3.3',
+        'ipv4': '7.3.4',
+        'ipv6': '7.3.5',
+        'uri': '7.3.6'
+        // 'uri-reference' // TODO: Not in draft-04
+        // 'json-pointer': // TODO: Not in draft-04
+      }
+    }
+  }
+}
+
+/**
+ * The schema-version that is used if no $schema-tag is provided
+ * @type {string}
+ */
+const defaultVersion = 'http://json-schema.org/draft-06/schema#'
+/**
+ * Returns the json-schema version of the input data based
+ * on the "$schema"-property
+ */
+function json_schema__version (options) {
+  if (!options.data || !options.data.$root) {
+    throw new Error('Expected \'options\' to be a Handlebars options object')
+  }
+  if (!options.data.$root.$version) {
+    return `Unspecified version (assuming ${defaultVersion})`
+  }
+  if (!supportedVersions[options.data.$root.$version]) {
+    return 'Unkown version: ' + options.data.$root.$version
+  }
+  return supportedVersions[options.data.$root.$version]
+}
+
+/**
+ * Returns true, if the version of the current schema matches the provided version
+ * @param rootSchema
+ */
+function json_schema__is_version (options) {
+  if (!options.data || !options.data.$root) {
+    throw new Error('Expected \'options\' to be a Handlebars options object')
+  }
+  let version = options.data.$root.$schema || defaultVersion
+  return supportedVersions[version]
 }
