@@ -5,7 +5,7 @@
    @param {string} sections a coma-separated list of section names (i.e. items, additionalItems)
    @param {string} title a title for the restrictions
 --}}
-<section class="json-schena--section">
+<section class="json-schema--section" data-keywords="{{sections}}">
     <div class="header" title="{{title}}">
         {{title}}
         <span class="json-schema--section-links">({{#each (json_schema__split_coma sections)~}}

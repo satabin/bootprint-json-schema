@@ -5,7 +5,7 @@ const chai = require('chai')
 const expect = chai.expect
 chai.use(require('dirty-chai'))
 
-var helpers = require('../handlebars/helpers.js')
+var helpers = require('../handlebars/helpers/index')
 var Handlebars = require('handlebars').create()
 Handlebars.registerHelper(helpers)
 

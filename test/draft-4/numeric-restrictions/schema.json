@@ -31,12 +31,20 @@
     "multiples_of_three": {
       "multipleOf": 3
     },
-    "allRestrictions": {
+    "all_restrictions": {
       "type": "number",
       "multipleOf": 3,
       "maximum": 16.0,
       "exclusiveMaximum": true,
       "minimum": 2.0,
+      "exclusiveMinimum": true
+    },
+    "string_with_range": {
+      "type": "string",
+      "multipleOf": 3,
+      "maximum": 1.0,
+      "exclusiveMaximum": true,
+      "minimum": 1.5,
       "exclusiveMinimum": true
     }
   }

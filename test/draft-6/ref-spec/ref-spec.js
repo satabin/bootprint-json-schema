@@ -12,9 +12,9 @@ var expect = require('chai').expect
 
 var tester = require('bootprint-unit-testing')
 
-describe('const', function () {
+describe('draft-06: const', function () {
   this.timeout(10000)
-  var bptest = tester(require('../..'), __dirname, require('./schema.json'))
+  var bptest = tester(require('../../..'), __dirname, require('./schema.json'))
 
   // Run bootprint. The parsed "index.html"-file (cheerio) is then available
   // under "bptest.$"
