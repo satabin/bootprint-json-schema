@@ -11,5 +11,5 @@ module.exports = {
  */
 function select (definition, keyword, selector) {
   selector = selector || ''
-  return `#definitions-${definition} section.json-schema--section[data-keywords*="${keyword}"] ${selector}`
+  return `#definitions-${definition} > .panel-body > .json-schema--schema > section.json-schema--section[data-keywords*="${keyword}"] ${selector}`
 }

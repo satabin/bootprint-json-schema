@@ -12,19 +12,9 @@ var expect = require('chai').expect
 
 var tester = require('bootprint-unit-testing')
 
-/**
- * Returns a cheerio-selector for the an element within the section of a definition
- * @param {string} definition key of the definitions-object
- * @param {string} keyword the keyword section to check
- * @param {string} selector a selector for elements within the section
- * @returns {string}
- */
-function select (definition, keyword, selector) {
-  selector = selector || ''
-  return `#definitions-${definition} section.json-schema--section[data-keywords*="${keyword}"] ${selector}`
-}
+const { select } = require('../../utils')
 
-describe.only('draft04: Numeric-restrictions', function () {
+describe('draft04: Numeric-restrictions', function () {
   this.timeout(10000)
   var bptest = tester(require('../../..'), __dirname, require('./schema.json'))
 

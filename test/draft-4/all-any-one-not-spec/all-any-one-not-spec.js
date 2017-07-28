@@ -13,7 +13,7 @@ const {select} = require('../../utils')
 
 const tester = require('bootprint-unit-testing')
 
-describe.only('draft-04: all-any-one-not-spec', function () {
+describe('draft-04: all-any-one-not-spec', function () {
   this.timeout(10000)
   const bptest = tester(require('../../..'), __dirname, require('./schema.json'))
 
