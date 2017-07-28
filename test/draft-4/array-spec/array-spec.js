@@ -127,4 +127,20 @@ describe('draft-04: array-spec', function () {
     })
   })
 
+  describe('the additionalItems keyword', function () {
+    it('should display the doclink to the draft-04-schema', function () {
+      expect(bptest.$(select('fixedArrayItems', 'additionalItems', '.header a')).attr('href'))
+        .to.equal('https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.3.1')
+    })
+
+    it('should show the correct section header', function () {
+      expect(bptest.textIn(select('fixedArrayItems', 'additionalItems', '> .header')))
+        .to.equal('Additional Items (5.3.1)')
+    })
+    it('should render a the schema of the additional items', function () {
+      expect(bptest.textIn(select('fixedArrayItems', 'additionalItems', '> .contents')))
+        .to.match(/string.*at most 4 characters/)
+    })
+  })
+
 })
