@@ -34,7 +34,7 @@ const metadata = {
       'anyOf': '5.5.4',
       'oneOf': '5.5.5',
       'not': '5.5.6',
-      'default': '6.2.1',
+      'default': '6.2',
       'format': '7'
     },
     formats: {

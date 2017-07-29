@@ -13,7 +13,8 @@ module.exports = {
   json_schema__is_required,
   json_schema__has_any,
   json_schema__enumerate,
-  json_schema__count_range
+  json_schema__count_range,
+  json_schema__if_version
 }
 
 const {htmlId} = require('bootprint-base/handlebars/helpers')
@@ -41,6 +42,22 @@ function json_schema__doclink (type, sectionName, options) {
 
   let section = sections[type][sectionName]
   return safe`<a href="${docLink}#section-${section}">${section}</a>`
+}
+
+/**
+ * Executes the helper-block, if the version matches any of the
+ * specified target versions
+ * @param {...string} targetVersions a list of schema-versions to match against (varargs)
+ */
+function json_schema__if_version (...targetVersions /*, options */) {
+  const options = targetVersions[targetVersions.length - 1]
+  targetVersions = targetVersions.slice(0, targetVersions.length - 1)
+  const schemaVersion = determineVersion(options)
+  if (targetVersions.indexOf(schemaVersion) >= 0) {
+    return options.fn(this)
+  } else {
+    return options.inverse(this)
+  }
 }
 
 /**
