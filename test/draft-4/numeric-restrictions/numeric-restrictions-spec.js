@@ -14,7 +14,7 @@ var tester = require('bootprint-unit-testing')
 
 const { select } = require('../../utils')
 
-describe('draft04: Numeric-restrictions', function () {
+describe('draft-04: Numeric-restrictions', function () {
   this.timeout(10000)
   var bptest = tester(require('../../..'), __dirname, require('./schema.json'))
 

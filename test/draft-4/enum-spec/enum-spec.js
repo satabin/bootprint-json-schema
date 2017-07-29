@@ -14,9 +14,9 @@ const {select} = require('../../utils')
 
 const tester = require('bootprint-unit-testing')
 
-describe.only('draft-04: enum', function () {
+describe('draft-04: enum', function () {
   this.timeout(10000)
-  var bptest = tester(require('../../..'), __dirname, require('./schema.json'))
+  const bptest = tester(require('../../..'), __dirname, require('./schema.json'))
 
   // Run bootprint. The parsed "index.html"-file (cheerio) is then available
   // under "bptest.$"
@@ -51,5 +51,4 @@ describe.only('draft-04: enum', function () {
     expect(bptest.textIn(select('objectEnum', 'enum', '> .contents')))
       .to.equal('{ "a": 1} { "b": "Nils"}')
   })
-
 })
